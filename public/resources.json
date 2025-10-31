@@ -1,0 +1,306 @@
+{
+  "Chicken": {
+    "width": 16,
+    "height": 16,
+    "anchorX": 8,
+    "anchorY": 12,
+    "states": [
+      "idle",
+      "walk",
+      "fart"
+    ],
+    "animations": {
+      "idle": {
+        "length": 6
+      },
+      "walk": {
+        "length": 6
+      },
+      "fart": {
+        "length": 1
+      }
+    },
+    "collision": {
+      "type": "circle",
+      "rad": 3
+    }
+  },
+  "Column1": {
+    "width": 32,
+    "height": 77,
+    "anchorX": 16,
+    "anchorY": 61,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    },
+    "collision": {
+      "type": "AABB",
+      "x": -16,
+      "y": -10,
+      "width": 32,
+      "height": 27
+    }
+  },
+  "LuneBlade": {
+    "width": 32,
+    "height": 32,
+    "anchorX": 22,
+    "anchorY": 27,
+    "states": [
+      "idle",
+      "run",
+      "hit",
+      "jump"
+    ],
+    "animations": {
+      "idle": {
+        "length": 7
+      },
+      "run": {
+        "length": 8
+      },
+      "hit": {
+        "length": 3
+      },
+      "jump": {
+        "length": 3
+      }
+    },
+    "collision": {
+      "type": "circle",
+      "rad": 4
+    }
+  },
+  "Orc": {
+    "width": 48,
+    "height": 39,
+    "anchorX": 20,
+    "anchorY": 24,
+    "states": [
+      "idle",
+      "walk",
+      "attack1",
+      "attack2",
+      "hit",
+      "death"
+    ],
+    "animations": {
+      "idle": {
+        "length": 6
+      },
+      "walk": {
+        "length": 6
+      },
+      "attack1": {
+        "length": 6,
+        "events": {
+          "4": "attack1"
+        }
+      },
+      "attack2": {
+        "length": 6
+      },
+      "hit": {
+        "length": 4
+      },
+      "death": {
+        "length": 4
+      }
+    },
+    "collision": {
+      "type": "circle",
+      "rad": 6
+    }
+  },
+  "Smoke": {
+    "width": 16,
+    "height": 16,
+    "anchorX": 8,
+    "anchorY": 8,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 5
+      }
+    }
+  },
+  "Tree10": {
+    "width": 54,
+    "height": 70,
+    "anchorX": 27,
+    "anchorY": 54,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "Tree11": {
+    "width": 40,
+    "height": 53,
+    "anchorX": 20,
+    "anchorY": 45,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "Tree12": {
+    "width": 32,
+    "height": 47,
+    "anchorX": 16,
+    "anchorY": 40,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "Tree2": {
+    "width": 36,
+    "height": 53,
+    "anchorX": 18,
+    "anchorY": 40,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    },
+    "collision": {
+      "type": "circle",
+      "rad": 6
+    }
+  },
+  "Tree3": {
+    "width": 53,
+    "height": 64,
+    "anchorX": 26.5,
+    "anchorY": 50,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "Tree4": {
+    "width": 48,
+    "height": 46,
+    "anchorX": 24,
+    "anchorY": 42,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "Tree5": {
+    "width": 47,
+    "height": 56,
+    "anchorX": 23.5,
+    "anchorY": 43,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "Tree6": {
+    "width": 47,
+    "height": 56,
+    "anchorX": 23.5,
+    "anchorY": 44,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "Tree7": {
+    "width": 53,
+    "height": 69,
+    "anchorX": 26.5,
+    "anchorY": 56,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "Tree8": {
+    "width": 53,
+    "height": 69,
+    "anchorX": 26.5,
+    "anchorY": 56,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "Tree9": {
+    "width": 55,
+    "height": 70,
+    "anchorX": 27.5,
+    "anchorY": 54,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "Waypoint": {
+    "width": 94,
+    "height": 80,
+    "anchorX": 47,
+    "anchorY": 40,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  }
+}
