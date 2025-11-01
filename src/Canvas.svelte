@@ -2,7 +2,8 @@
     import { onMount } from "svelte";
     import { seededRandom } from "./utils.js";
     import { level, selectedResource } from "./state.svelte.js";
-    import { scale } from "svelte/transition";
+    import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
+    import { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash";
 
     let canvas;
     let ctx;
@@ -12,8 +13,8 @@
     let floorTilesPng;
     let floorTileSize = 16;
 
-    export let worldWidth;
-    export let worldHeight;
+    let worldWidth;
+    let worldHeight;
 
     let seed = "12345";
 
@@ -24,7 +25,7 @@
     let propIsFloorItem = false;
 
     onMount(() => {
-        canvas.width = window.innerWidth - 320 * devicePixelRatio;
+        canvas.width = window.innerWidth - 200 * devicePixelRatio;
         canvas.height = window.innerHeight;
 
         width = canvas.width;
@@ -122,12 +123,14 @@
 
             ctx.scale(ent.scale, ent.scale);
 
+            ctx.rotate(ent.rot);
+
             ctx.drawImage(
-                ent.img,
-                -ent.anchorX,
-                -ent.anchorY,
-                ent.width,
-                ent.height,
+                ent.res.img,
+                -ent.res.anchorX,
+                -ent.res.anchorY,
+                ent.res.width,
+                ent.res.height,
             );
 
             ctx.restore();
@@ -169,22 +172,70 @@
     }
 
     function onclick(event) {
-        if (selectedResource.state != null) {
-            let res = selectedResource.state;
-            const canvasX =
-                (event.clientX - canvasGeometry.left) * canvasGeometry.scaleX;
-            const canvasY =
-                (event.clientY - canvasGeometry.top) * canvasGeometry.scaleY;
+        const canvasX =
+            (event.clientX - canvasGeometry.left) * canvasGeometry.scaleX;
+        const canvasY =
+            (event.clientY - canvasGeometry.top) * canvasGeometry.scaleY;
 
-            level.state.entities.push({
-                name: res.name,
-                x: canvasX,
-                y: canvasY,
-                scale: propScale,
-                rot: propRotation,
-                img: selectedResource.state.img,
+        if (selectedResource.state != null) {
+            addEntity(selectedResource.state, canvasX, canvasY);
+        } else {
+            //drag and drop / duplicate
+            let closestDist = Infinity;
+            let selectedEnt = {};
+
+            level.state.entities.forEach((ent) => {
+                let dx = ent.x - canvasX;
+                let dy = ent.y - canvasY;
+                let distSqr = dy * dy + dx * dx;
+
+                console.log(distSqr);
+
+                if (distSqr < 200 && distSqr < closestDist) {
+                    closestDist = distSqr;
+                    selectedEnt = ent;
+                }
             });
+
+            if (closestDist != Infinity) {
+                //set clicked entity as selected entity
+                propIsFloorItem = selectedEnt.isFloorItem;
+                propRotation = selectedEnt.rot;
+                propScale = selectedEnt.scale;
+                selectedResource.state = selectedEnt.res;
+
+                //then remove it from the entities list for drag n drop behaviour
+                const idx = level.state.entities.findIndex((ent) => {
+                    return ent === selectedEnt;
+                });
+                level.state.entities.splice(idx, 1);
+            }
+
+            draw();
+            onmousemove(event)
         }
+    }
+
+    function addEntity(ent, x, y) {
+        level.state.entities.push({
+            res: ent,
+            x,
+            y,
+            scale: propScale,
+            rot: propRotation,
+            isFloorItem: propIsFloorItem,
+        });
+
+        level.state.entities.sort((a, b) => {
+            if (a.isFloorItem && b.isFloorItem) {
+                return 0;
+            } else if (a.isFloorItem) {
+                return -1;
+            } else if (b.isFloorItem) {
+                return 1;
+            }
+            return a.y - b.y;
+        });
     }
 </script>
 
@@ -192,29 +243,45 @@
 
 {#if selectedResource.state != null}
     <div class="entityProps">
-        <div class="inputField">
-            <label>Scale:</label>
-            <input type="number" step="0.1" bind:value={propScale} />
+        <div>
+            <div class="inputField">
+                <label>Scale:</label>
+                <input type="number" step="0.1" bind:value={propScale} />
+            </div>
+            <div class="inputField">
+                <label>Rotation:</label>
+                <input type="number" step="0.1" bind:value={propRotation} />
+            </div>
+            <div class="inputField">
+                <label>Floor item</label>
+                <input type="checkbox" bind:checked={propIsFloorItem} />
+            </div>
         </div>
-        <div class="inputField">
-            <label>Rotation:</label>
-            <input type="number" step="0.1" bind:value={propRotation} />
-        </div>
-        <div class="inputField">
-            <label>Floor item</label>
-            <input type="checkbox" bind:checked={propIsFloorItem} />
-        </div>
+        <button
+            class="trashIcon"
+            onclick={(event) => {
+                event.stopPropagation();
+                selectedResource.state = null;
+                draw();
+            }}
+        >
+            <FontAwesomeIcon icon={faTrash} />
+        </button>
     </div>
 {/if}
 
 <style>
+    canvas {
+        image-rendering: pixelated;
+    }
+
     .entityProps {
         position: fixed;
         bottom: 10px;
         left: 10px;
         background: white;
         display: flex;
-        flex-direction: column;
+        align-items: center;
         padding: 8px;
         border-radius: 4px;
         box-shadow: 0px 15px 20px -10px;
@@ -227,9 +294,18 @@
     }
 
     input {
-        width: 40px;
+        max-width: 40px;
         border-radius: 6px;
         border: 1px solid lightgray;
         padding: 4px 8px;
+    }
+
+    .trashIcon {
+        font-size: 28px;
+        color: #e67e7e;
+        padding: 10px;
+        margin-left: 30px;
+        margin-right: 10px;
+        border: 2px solid;
     }
 </style>
