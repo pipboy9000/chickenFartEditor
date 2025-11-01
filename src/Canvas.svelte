@@ -25,7 +25,7 @@
     let propIsFloorItem = false;
 
     onMount(() => {
-        canvas.width = window.innerWidth - 200 * devicePixelRatio;
+        canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
         width = canvas.width;

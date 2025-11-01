@@ -16,6 +16,9 @@
         max-height: 100vh;
         height: 100vh;
         overflow-y: auto;
+        position: fixed;
+        right: 0;
+        width: 240px;
     }
 
     .entities {

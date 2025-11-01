@@ -25,6 +25,8 @@
         background: lightblue;
         padding: 8px;
         border-radius: 4px;
+        backdrop-filter: blur(2px);
+        background: #d5f2ff38;
     }
 
     img {
