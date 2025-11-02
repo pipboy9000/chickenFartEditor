@@ -4,6 +4,24 @@ export const selectedResource = $state({state: null});
 
 export const level = $state({state: {entities:[]}});
 
+export function getLevelJson() {
+    
+    let newObj = {entities: []};
+
+    level.state.entities.forEach(ent => {
+        newObj.entities.push({
+            name: ent.res.name,
+            x: ent.x,
+            y: ent.y,
+            rot: ent.rot,
+            isFloorItem: ent.isFloorItem,
+            scale: ent.scale
+        })
+    })
+
+    return JSON.stringify(newObj);
+}
+
 export async function loadResources() {
 
     try {

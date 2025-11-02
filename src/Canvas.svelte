@@ -211,9 +211,13 @@
                 level.state.entities.splice(idx, 1);
             }
 
-            draw();
-            onmousemove(event)
+            onmousemove(event);
         }
+    }
+    
+    function onwheel(event) {
+        propScale += event.deltaY * 0.01;
+        onmousemove(event);
     }
 
     function addEntity(ent, x, y) {
@@ -239,7 +243,7 @@
     }
 </script>
 
-<canvas bind:this={canvas} {onmousemove} {onclick}></canvas>
+<canvas bind:this={canvas} {onmousemove} {onclick} {onwheel}></canvas>
 
 {#if selectedResource.state != null}
     <div class="entityProps">
@@ -262,6 +266,9 @@
             onclick={(event) => {
                 event.stopPropagation();
                 selectedResource.state = null;
+                propIsFloorItem = false;
+                propRotation = 0;
+                propScale = 1;
                 draw();
             }}
         >

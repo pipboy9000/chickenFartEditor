@@ -27,6 +27,8 @@
         border-radius: 4px;
         backdrop-filter: blur(2px);
         background: #d5f2ff38;
+        background: radial-gradient(#ccf3ff00, #aaf4ff36);
+        border: 1px solid #ffffff21;
     }
 
     img {
