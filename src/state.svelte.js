@@ -1,12 +1,12 @@
-export const resources = $state({state:[]});
+export const resources = $state({ state: [] });
 
-export const selectedResource = $state({state: null});
+export const selectedResource = $state({ state: null });
 
-export const level = $state({state: {entities:[]}});
+export const level = $state({ state: { entities: [] } });
 
 export function getLevelJson() {
-    
-    let newObj = {entities: []};
+
+    let newObj = { entities: [] };
 
     level.state.entities.forEach(ent => {
         newObj.entities.push({
@@ -20,6 +20,16 @@ export function getLevelJson() {
     })
 
     return JSON.stringify(newObj);
+}
+
+export function loadLevelFromJson(jsonObj) {
+
+    level.state.entities = [];
+
+    jsonObj.entities.forEach(ent => {
+        const res = resources.state.find(res => res.name === ent.name);
+        addEntity(res, ent.x, ent.y, ent.scale, ent.rot, ent.isFloorItem)
+    })
 }
 
 export async function loadResources() {
@@ -44,10 +54,32 @@ export async function loadResources() {
                 ...data[name]
             });
         });
-        
+
         resources.state = res;
 
     } catch (e) {
         console.error("Failed to load resources:", e);
     }
+}
+
+export function addEntity(res, x, y, scale, rot, isFloorItem) {
+    level.state.entities.push({
+        res,
+        x,
+        y,
+        scale,
+        rot,
+        isFloorItem,
+    });
+
+    level.state.entities.sort((a, b) => {
+        if (a.isFloorItem && b.isFloorItem) {
+            return 0;
+        } else if (a.isFloorItem) {
+            return -1;
+        } else if (b.isFloorItem) {
+            return 1;
+        }
+        return a.y - b.y;
+    });
 }

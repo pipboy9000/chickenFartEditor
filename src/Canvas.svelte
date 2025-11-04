@@ -1,7 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { seededRandom } from "./utils.js";
-    import { level, selectedResource } from "./state.svelte.js";
+    import { level, selectedResource, addEntity } from "./state.svelte.js";
     import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
     import { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash";
 
@@ -20,9 +20,9 @@
 
     let canvasGeometry = {};
 
-    let propRotation = 0;
-    let propScale = 1;
-    let propIsFloorItem = false;
+    let propRotation = $state(0);
+    let propScale = $state(1);
+    let propIsFloorItem = $state(false);
 
     onMount(() => {
         canvas.width = window.innerWidth;
@@ -45,10 +45,9 @@
         loadFloorTiles("grass", 16, width + 100, height + 100, "level1");
     });
 
-    function clearCanvas() {
-        ctx.fillStyle = "black";
-        ctx.fillRect(0, 0, width, height);
-    }
+    $effect(() => {
+        if (level.state.entities.length > 0) draw();
+    });
 
     function draw() {
         drawFloorTiles();
@@ -178,7 +177,14 @@
             (event.clientY - canvasGeometry.top) * canvasGeometry.scaleY;
 
         if (selectedResource.state != null) {
-            addEntity(selectedResource.state, canvasX, canvasY);
+            addEntity(
+                selectedResource.state,
+                canvasX,
+                canvasY,
+                propScale,
+                propRotation,
+                propIsFloorItem,
+            );
         } else {
             //drag and drop / duplicate
             let closestDist = Infinity;
@@ -214,32 +220,10 @@
             onmousemove(event);
         }
     }
-    
+
     function onwheel(event) {
         propScale += event.deltaY * 0.01;
         onmousemove(event);
-    }
-
-    function addEntity(ent, x, y) {
-        level.state.entities.push({
-            res: ent,
-            x,
-            y,
-            scale: propScale,
-            rot: propRotation,
-            isFloorItem: propIsFloorItem,
-        });
-
-        level.state.entities.sort((a, b) => {
-            if (a.isFloorItem && b.isFloorItem) {
-                return 0;
-            } else if (a.isFloorItem) {
-                return -1;
-            } else if (b.isFloorItem) {
-                return 1;
-            }
-            return a.y - b.y;
-        });
     }
 </script>
 

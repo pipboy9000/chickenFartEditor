@@ -1,16 +1,18 @@
 <script>
     import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
-    import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons/faFloppyDisk";
+    import { faCode } from "@fortawesome/free-solid-svg-icons/faCode";
     import { getLevelJson, level } from "./state.svelte";
 
-    function onclick() {
-        console.log(getLevelJson());
+    let { showCodePopup } = $props();
+
+    function showCode() {
+        showCodePopup();
     }
 </script>
 
 <div class="buttons">
-    <button class="btn" {onclick}>
-        <FontAwesomeIcon icon={faFloppyDisk} />
+    <button class="btn" onclick={showCode}>
+        <FontAwesomeIcon icon={faCode} />
     </button>
 </div>
 
