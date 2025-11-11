@@ -1,10 +1,17 @@
 {
-    "width": 32,
-    "height": 32,
-    "anchorX": 22,
-    "anchorY": 27,
+    "width": 88,
+    "height": 24,
+    "anchorX": 50,
+    "anchorY": 15,
     "states": [
-        "idle","run", "hit","jump"
+        "idle",
+        "run",
+        "attack1",
+        "attack2",
+        "dash",
+        "death",
+        "hit",
+        "jump"
     ],
     "animations": {
         "idle": {
@@ -13,15 +20,30 @@
         "run": {
             "length": 8
         },
+        "attack1": {
+            "length": 10,
+            "events": {
+                "4": "attack1"
+            }
+        },
+        "attack2": {
+            "length": 15
+        },
+        "dash": {
+            "length": 12
+        },
+        "death": {
+            "length": 14
+        },
         "hit": {
             "length": 3
         },
         "jump": {
-            "length": 3
+            "length": 4
         }
     },
     "collision": {
         "type": "circle",
-        "rad": 4
+        "rad": 8
     }
 }

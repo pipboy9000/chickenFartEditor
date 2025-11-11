@@ -1,4 +1,88 @@
 {
+  "Bush1": {
+    "width": 22,
+    "height": 19,
+    "anchorX": 11,
+    "anchorY": 14,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "Bush2": {
+    "width": 27,
+    "height": 25,
+    "anchorX": 14,
+    "anchorY": 20,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "Bush3": {
+    "width": 38,
+    "height": 32,
+    "anchorX": 19,
+    "anchorY": 27,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "Bush4": {
+    "width": 47,
+    "height": 42,
+    "anchorX": 23,
+    "anchorY": 36,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "Bush5": {
+    "width": 39,
+    "height": 45,
+    "anchorX": 26,
+    "anchorY": 34,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "Bush6": {
+    "width": 40,
+    "height": 35,
+    "anchorX": 22,
+    "anchorY": 28,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
   "Chicken": {
     "width": 16,
     "height": 16,
@@ -21,8 +105,11 @@
       }
     },
     "collision": {
-      "type": "circle",
-      "rad": 3
+      "type": "AABB",
+      "x": -5,
+      "y": -5,
+      "width": 10,
+      "height": 10
     }
   },
   "Column1": {
@@ -41,19 +128,107 @@
     "collision": {
       "type": "AABB",
       "x": -16,
-      "y": -10,
+      "y": -12,
       "width": 32,
-      "height": 27
+      "height": 18
+    }
+  },
+  "Column2": {
+    "width": 32,
+    "height": 57,
+    "anchorX": 16,
+    "anchorY": 61,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    },
+    "collision": {
+      "type": "AABB",
+      "x": -16,
+      "y": -12,
+      "width": 32,
+      "height": 18
+    }
+  },
+  "Cube1": {
+    "width": 32,
+    "height": 46,
+    "anchorX": 16,
+    "anchorY": 36,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    },
+    "collision": {
+      "type": "AABB",
+      "x": -16,
+      "y": -24,
+      "width": 32,
+      "height": 28
+    }
+  },
+  "FallenBrick1": {
+    "width": 18,
+    "height": 16,
+    "anchorX": 9,
+    "anchorY": 8,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "FallenBrick2": {
+    "width": 19,
+    "height": 16,
+    "anchorX": 9,
+    "anchorY": 4,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "FallenBrick3": {
+    "width": 31,
+    "height": 19,
+    "anchorX": 15,
+    "anchorY": 9,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
     }
   },
   "LuneBlade": {
-    "width": 32,
-    "height": 32,
-    "anchorX": 22,
-    "anchorY": 27,
+    "width": 88,
+    "height": 24,
+    "anchorX": 50,
+    "anchorY": 15,
     "states": [
       "idle",
       "run",
+      "attack1",
+      "attack2",
+      "dash",
+      "death",
       "hit",
       "jump"
     ],
@@ -64,23 +239,38 @@
       "run": {
         "length": 8
       },
+      "attack1": {
+        "length": 10,
+        "events": {
+          "4": "attack1"
+        }
+      },
+      "attack2": {
+        "length": 15
+      },
+      "dash": {
+        "length": 12
+      },
+      "death": {
+        "length": 14
+      },
       "hit": {
         "length": 3
       },
       "jump": {
-        "length": 3
+        "length": 4
       }
     },
     "collision": {
       "type": "circle",
-      "rad": 4
+      "rad": 8
     }
   },
   "Orc": {
     "width": 48,
     "height": 39,
     "anchorX": 20,
-    "anchorY": 24,
+    "anchorY": 20,
     "states": [
       "idle",
       "walk",
@@ -109,12 +299,164 @@
         "length": 4
       },
       "death": {
+        "length": 5,
+        "events": {
+          "4": "death"
+        }
+      }
+    },
+    "collision": {
+      "type": "circle",
+      "rad": 8
+    }
+  },
+  "Rock1": {
+    "width": 57,
+    "height": 44,
+    "anchorX": 29,
+    "anchorY": 22,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    },
+    "collision": {
+      "type": "circle",
+      "rad": 15
+    }
+  },
+  "Rock2": {
+    "width": 11,
+    "height": 10,
+    "anchorX": 5,
+    "anchorY": 5,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "Rock3": {
+    "width": 16,
+    "height": 14,
+    "anchorX": 8,
+    "anchorY": 7,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "Rock4": {
+    "width": 24,
+    "height": 19,
+    "anchorX": 12,
+    "anchorY": 9,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "Rock5": {
+    "width": 24,
+    "height": 19,
+    "anchorX": 12,
+    "anchorY": 9,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "Rock6": {
+    "width": 27,
+    "height": 22,
+    "anchorX": 13,
+    "anchorY": 11,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "Rock7": {
+    "width": 27,
+    "height": 27,
+    "anchorX": 13,
+    "anchorY": 13,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    }
+  },
+  "Samurai": {
+    "width": 62,
+    "height": 37,
+    "anchorX": 17,
+    "anchorY": 24,
+    "states": [
+      "idle",
+      "run",
+      "attack",
+      "hit"
+    ],
+    "animations": {
+      "idle": {
+        "length": 10
+      },
+      "run": {
+        "length": 10
+      },
+      "attack": {
+        "length": 7,
+        "events": {
+          "5": "attack1"
+        }
+      },
+      "hit": {
         "length": 4
       }
     },
     "collision": {
       "type": "circle",
-      "rad": 6
+      "rad": 10
+    }
+  },
+  "Shuriken": {
+    "width": 22,
+    "height": 22,
+    "anchorX": 11,
+    "anchorY": 11,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
     }
   },
   "Smoke": {
@@ -129,6 +471,38 @@
       "idle": {
         "length": 5
       }
+    }
+  },
+  "Sparks": {
+    "width": 16,
+    "height": 16,
+    "anchorX": 8,
+    "anchorY": 8,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 6
+      }
+    }
+  },
+  "Statue": {
+    "width": 37,
+    "height": 72,
+    "anchorX": 19,
+    "anchorY": 56,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
+    },
+    "collision": {
+      "type": "circle",
+      "rad": 18
     }
   },
   "Tree10": {
@@ -185,10 +559,6 @@
       "idle": {
         "length": 1
       }
-    },
-    "collision": {
-      "type": "circle",
-      "rad": 6
     }
   },
   "Tree3": {
@@ -287,6 +657,57 @@
       "idle": {
         "length": 1
       }
+    }
+  },
+  "WarriorKing": {
+    "width": 91,
+    "height": 57,
+    "anchorX": 36,
+    "anchorY": 40,
+    "states": [
+      "idle",
+      "walk",
+      "attack1",
+      "taunt",
+      "attack2",
+      "death"
+    ],
+    "animations": {
+      "idle": {
+        "length": 16
+      },
+      "walk": {
+        "length": 8
+      },
+      "attack1": {
+        "length": 30,
+        "events": {
+          "6": "attack1-1",
+          "15": "attack1-2",
+          "24": "attack1-3"
+        }
+      },
+      "taunt": {
+        "length": 18
+      },
+      "attack2": {
+        "length": 30,
+        "events": {
+          "10": "attack2",
+          "12": "attack2",
+          "14": "attack2"
+        }
+      },
+      "death": {
+        "length": 40,
+        "events": {
+          "39": "death"
+        }
+      }
+    },
+    "collision": {
+      "type": "circle",
+      "rad": 10
     }
   },
   "Waypoint": {

@@ -1,8 +1,8 @@
 {
-    "width": 36,
-    "height": 53,
-    "anchorX": 18,
-    "anchorY": 40,
+    "width": 38,
+    "height": 32,
+    "anchorX": 19,
+    "anchorY": 27,
     "states": [
         "idle"
     ],

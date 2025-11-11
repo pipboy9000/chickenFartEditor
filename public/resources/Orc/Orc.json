@@ -2,7 +2,7 @@
     "width": 48,
     "height": 39,
     "anchorX": 20,
-    "anchorY": 24,
+    "anchorY": 20,
     "states": [
         "idle",
         "walk",
@@ -31,11 +31,14 @@
             "length": 4
         },
         "death": {
-            "length": 4
+            "length": 5,
+            "events": {
+                "4": "death" 
+            }
         }
     },
     "collision": {
         "type": "circle",
-        "rad": 6
+        "rad": 8
     }
 }

@@ -20,7 +20,10 @@
         }
     },
     "collision": {
-        "type": "circle",
-        "rad": 3
+        "type": "AABB",
+        "x":-5,
+        "y": -5,
+        "width": 10,
+        "height": 10
     }
 }

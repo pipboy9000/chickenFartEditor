@@ -1,0 +1,33 @@
+{
+    "width": 62,
+    "height": 37,
+    "anchorX": 17,
+    "anchorY": 24,
+    "states": [
+        "idle",
+        "run",
+        "attack",
+        "hit"
+    ],
+    "animations": {
+        "idle": {
+            "length": 10
+        },
+        "run": {
+            "length": 10
+        },
+        "attack": {
+            "length": 7,
+            "events": {
+                "5": "attack1"
+            }
+        },
+        "hit": {
+            "length": 4
+        }
+    },
+    "collision": {
+        "type": "circle",
+        "rad": 10
+    }
+}

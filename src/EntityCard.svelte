@@ -1,9 +1,11 @@
 <script>
     import { selectedResource } from "./state.svelte";
+    import { duplicate } from "./state.svelte";
     export let res;
 
     function onclick(evt) {
         selectedResource.state = res;
+        duplicate.state = true;
     }
 </script>
 

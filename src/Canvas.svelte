@@ -1,9 +1,10 @@
 <script>
     import { onMount } from "svelte";
     import { seededRandom } from "./utils.js";
-    import { level, selectedResource, addEntity } from "./state.svelte.js";
+    import { level, selectedResource, addEntity, removeEntity } from "./state.svelte.js";
     import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
     import { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash";
+    import { duplicate } from "./state.svelte.js";
 
     let canvas;
     let ctx;
@@ -177,6 +178,7 @@
             (event.clientY - canvasGeometry.top) * canvasGeometry.scaleY;
 
         if (selectedResource.state != null) {
+            
             addEntity(
                 selectedResource.state,
                 canvasX,
@@ -185,25 +187,29 @@
                 propRotation,
                 propIsFloorItem,
             );
+
+            if(!duplicate.state) {
+                selectedResource.state = null;
+            }
+
         } else {
             //drag and drop / duplicate
             let closestDist = Infinity;
             let selectedEnt = {};
-
+            
             level.state.entities.forEach((ent) => {
                 let dx = ent.x - canvasX;
                 let dy = ent.y - canvasY;
                 let distSqr = dy * dy + dx * dx;
-
-                console.log(distSqr);
-
+                
                 if (distSqr < 200 && distSqr < closestDist) {
                     closestDist = distSqr;
                     selectedEnt = ent;
                 }
             });
-
+            
             if (closestDist != Infinity) {
+                duplicate.state = false;
                 //set clicked entity as selected entity
                 propIsFloorItem = selectedEnt.isFloorItem;
                 propRotation = selectedEnt.rot;
@@ -211,10 +217,9 @@
                 selectedResource.state = selectedEnt.res;
 
                 //then remove it from the entities list for drag n drop behaviour
-                const idx = level.state.entities.findIndex((ent) => {
-                    return ent === selectedEnt;
-                });
-                level.state.entities.splice(idx, 1);
+                removeEntity(selectedEnt);
+                
+
             }
 
             onmousemove(event);
@@ -224,6 +229,10 @@
     function onwheel(event) {
         propScale += event.deltaY * 0.01;
         onmousemove(event);
+    }
+
+    function onkeydown(key) {
+        console.log(key);
     }
 </script>
 
