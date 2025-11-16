@@ -1,7 +1,12 @@
 <script>
     import { onMount } from "svelte";
     import { seededRandom } from "./utils.js";
-    import { level, selectedResource, addEntity, removeEntity } from "./state.svelte.js";
+    import {
+        level,
+        selectedResource,
+        addEntity,
+        removeEntity,
+    } from "./state.svelte.js";
     import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
     import { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash";
     import { duplicate } from "./state.svelte.js";
@@ -50,7 +55,7 @@
         if (level.state.entities.length > 0) draw();
     });
 
-    function draw() {
+    export function draw() {
         drawFloorTiles();
         drawEntities();
     }
@@ -125,14 +130,19 @@
 
             ctx.rotate(ent.rot);
 
-            ctx.drawImage(
-                ent.res.img,
-                -ent.res.anchorX,
-                -ent.res.anchorY,
-                ent.res.width,
-                ent.res.height,
-            );
-
+            try {
+                ctx.drawImage(
+                    ent.res.img,
+                    -ent.res.anchorX,
+                    -ent.res.anchorY,
+                    ent.res.width,
+                    ent.res.height,
+                );
+            } catch (err) {
+                debugger;
+                console.log(ent);
+                throw new Error(err);
+            }
             ctx.restore();
         });
     }
@@ -178,7 +188,6 @@
             (event.clientY - canvasGeometry.top) * canvasGeometry.scaleY;
 
         if (selectedResource.state != null) {
-            
             addEntity(
                 selectedResource.state,
                 canvasX,
@@ -188,26 +197,25 @@
                 propIsFloorItem,
             );
 
-            if(!duplicate.state) {
+            if (!duplicate.state) {
                 selectedResource.state = null;
             }
-
         } else {
             //drag and drop / duplicate
             let closestDist = Infinity;
             let selectedEnt = {};
-            
+
             level.state.entities.forEach((ent) => {
                 let dx = ent.x - canvasX;
                 let dy = ent.y - canvasY;
                 let distSqr = dy * dy + dx * dx;
-                
+
                 if (distSqr < 200 && distSqr < closestDist) {
                     closestDist = distSqr;
                     selectedEnt = ent;
                 }
             });
-            
+
             if (closestDist != Infinity) {
                 duplicate.state = false;
                 //set clicked entity as selected entity
@@ -218,8 +226,6 @@
 
                 //then remove it from the entities list for drag n drop behaviour
                 removeEntity(selectedEnt);
-                
-
             }
 
             onmousemove(event);

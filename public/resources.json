@@ -128,16 +128,16 @@
     "collision": {
       "type": "AABB",
       "x": -16,
-      "y": -12,
+      "y": -10,
       "width": 32,
-      "height": 18
+      "height": 16
     }
   },
   "Column2": {
     "width": 32,
     "height": 57,
     "anchorX": 16,
-    "anchorY": 61,
+    "anchorY": 50,
     "states": [
       "idle"
     ],
@@ -149,7 +149,7 @@
     "collision": {
       "type": "AABB",
       "x": -16,
-      "y": -12,
+      "y": -18,
       "width": 32,
       "height": 18
     }
@@ -172,7 +172,7 @@
       "x": -16,
       "y": -24,
       "width": 32,
-      "height": 28
+      "height": 26
     }
   },
   "FallenBrick1": {
@@ -473,6 +473,57 @@
       }
     }
   },
+  "Soldier": {
+    "width": 100,
+    "height": 100,
+    "anchorX": 52,
+    "anchorY": 51,
+    "states": [
+      "idle",
+      "walk",
+      "attack1",
+      "attack2",
+      "attack3",
+      "hit",
+      "death"
+    ],
+    "animations": {
+      "idle": {
+        "length": 6
+      },
+      "walk": {
+        "length": 8
+      },
+      "attack1": {
+        "length": 6,
+        "events": {
+          "3": "attack1"
+        }
+      },
+      "attack2": {
+        "length": 6,
+        "events": {
+          "3": "attack1"
+        }
+      },
+      "attack3": {
+        "length": 9,
+        "events": {
+          "8": "attack3"
+        }
+      },
+      "hit": {
+        "length": 4
+      },
+      "death": {
+        "length": 4
+      }
+    },
+    "collision": {
+      "type": "circle",
+      "rad": 10
+    }
+  },
   "Sparks": {
     "width": 16,
     "height": 16,
@@ -491,7 +542,7 @@
     "width": 37,
     "height": 72,
     "anchorX": 19,
-    "anchorY": 56,
+    "anchorY": 54,
     "states": [
       "idle"
     ],
@@ -502,7 +553,21 @@
     },
     "collision": {
       "type": "circle",
-      "rad": 18
+      "rad": 14
+    }
+  },
+  "Tavern": {
+    "width": 200,
+    "height": 276,
+    "anchorX": 100,
+    "anchorY": 200,
+    "states": [
+      "idle"
+    ],
+    "animations": {
+      "idle": {
+        "length": 1
+      }
     }
   },
   "Tree10": {

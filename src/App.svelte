@@ -2,14 +2,21 @@
   import { onMount } from "svelte";
   import Canvas from "./Canvas.svelte";
   import SideBar from "./SideBar.svelte";
-  import { loadResources } from "./state.svelte.js";
+  import { loadResources, getLevelFromLocalStorage } from "./state.svelte.js";
   import TopBar from "./TopBar.svelte";
   import CodePopup from "./CodePopup.svelte";
 
   let showCode = false;
+  let canvasEl;
+
+  async function initAsync() {
+    await loadResources();
+    await getLevelFromLocalStorage();
+    setTimeout(canvasEl.draw, 500);
+  }
 
   onMount(() => {
-    loadResources();
+    initAsync();
   });
 
   function showCodePopup() {
@@ -22,7 +29,7 @@
 </script>
 
 <main>
-  <Canvas />
+  <Canvas bind:this={canvasEl} />
   <TopBar {showCodePopup} />
   <SideBar />
   {#if showCode}

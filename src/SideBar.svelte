@@ -1,14 +1,16 @@
 <script>
-    import EntityCard from "./EntityCard.svelte";
-    import { resources, selectedResource } from "./state.svelte.js";
+    import EntitiesList from "./EntitiesList.svelte";
+    import FloorTilesList from "./FloorTilesList.svelte";
+
+    let selectedTab = $state("entities");
 </script>
 
 <div class="sideBar">
-    <div class="entities">
-        {#each resources.state as entity}
-            <EntityCard res={entity} />
-        {/each}
-    </div>
+    {#if selectedTab === "entities"}
+        <EntitiesList />
+    {:else if selectedTab === "floorTiles"}
+        <FloorTilesList />
+    {/if}
 </div>
 
 <style>
@@ -19,10 +21,5 @@
         position: fixed;
         right: 0;
         width: 240px;
-    }
-
-    .entities {
-        display: flex;
-        flex-wrap: wrap;
     }
 </style>

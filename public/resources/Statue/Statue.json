@@ -2,7 +2,7 @@
     "width": 37,
     "height": 72,
     "anchorX": 19,
-    "anchorY": 56,
+    "anchorY": 54,
     "states": [
         "idle"
     ],
@@ -13,6 +13,6 @@
     },
     "collision": {
         "type": "circle",
-        "rad": 18
+        "rad": 14
     }
 }

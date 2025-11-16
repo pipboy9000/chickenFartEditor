@@ -4,7 +4,7 @@ export const selectedResource = $state({ state: null });
 
 export const level = $state({ state: { resources: [], entities: [] } });
 
-export const duplicate = $state({state: true});
+export const duplicate = $state({ state: true });
 
 export function getLevelJson() {
 
@@ -35,9 +35,8 @@ export function loadLevelFromJson(jsonObj) {
     jsonObj.entities.forEach(ent => {
         const res = resources.state.find(res => res.name === ent.name);
         addEntity(res, ent.x, ent.y, ent.scale, ent.rot, ent.isFloorItem);
-
         if (level.state.resources.indexOf(res.name) === -1) level.state.resources.push(res.name);
-    })
+    });
 }
 
 export async function loadResources() {
@@ -96,6 +95,8 @@ export function addEntity(res, x, y, scale, rot, isFloorItem) {
         }
         return a.y - b.y;
     });
+
+    saveLevelToLocalStorage();
 }
 
 export function removeEntity(entity) {
@@ -111,4 +112,17 @@ export function removeEntity(entity) {
         idx = level.state.resources.indexOf(entity.res.name);
         level.state.resources.splice(idx, 1);
     }
+}
+
+export async function getLevelFromLocalStorage() {
+    const lvl = window.localStorage.getItem("level");
+    const lvlObj = JSON.parse(lvl);
+
+    if (lvlObj) {
+        loadLevelFromJson(lvlObj)
+    }
+}
+
+export function saveLevelToLocalStorage() {
+    window.localStorage.setItem("level", getLevelJson());
 }

@@ -14,8 +14,8 @@
     "collision": {
         "type": "AABB",
         "x": -16,
-        "y": -12,
+        "y": -10,
         "width": 32,
-        "height": 18
+        "height": 16
     }
 }
