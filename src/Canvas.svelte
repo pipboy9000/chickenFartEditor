@@ -33,6 +33,8 @@
     let propScale = $state(1);
     let propIsFloorItem = $state(false);
 
+    $inspect(selectedFloorTile);
+
     onMount(() => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
@@ -103,6 +105,7 @@
     }
 
     function drawFloorTiles() {
+        //default tiles
         floorTiles.forEach((row, x) => {
             row.forEach((tile, y) => {
                 const sx = (tile % 8) * floorTileSize;
@@ -119,6 +122,24 @@
                     floorTileSize,
                 );
             });
+        });
+
+        //set tiles
+        level.state.floorTiles.forEach((tile) => {
+            const imgRes = resources.state.floorTiles.find(
+                (_tile) => _tile.name === tile.name,
+            ).img;
+            ctx.drawImage(
+                imgRes,
+                tile.sx,
+                tile.sy,
+                floorTileSize,
+                floorTileSize,
+                tile.x * floorTileSize,
+                tile.y * floorTileSize,
+                floorTileSize,
+                floorTileSize,
+            );
         });
     }
 
@@ -166,29 +187,14 @@
             const floorTileX = Math.floor(canvasX / floorTileSize);
             const floorTileY = Math.floor(canvasY / floorTileSize);
 
-            const imgRes = resources.state.floorTiles.find(
-                (res) => res.name === selectedFloorTile.state.name,
-            );
-
             // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
 
             ctx.save();
 
-            console.log(
-                selectedFloorTile.state.x * floorTileSize,
-                selectedFloorTile.state.y * floorTileSize,
-                floorTileSize,
-                floorTileSize,
-                floorTileX,
-                floorTileY,
-                floorTileSize,
-                floorTileSize,
-            );
-
             ctx.drawImage(
-                imgRes.img,
-                selectedFloorTile.state.x * floorTileSize,
-                selectedFloorTile.state.y * floorTileSize,
+                selectedFloorTile.state.img,
+                selectedFloorTile.state.sx,
+                selectedFloorTile.state.sy,
                 floorTileSize,
                 floorTileSize,
                 floorTileX * floorTileSize,
@@ -234,7 +240,23 @@
         const canvasY =
             (event.clientY - canvasGeometry.top) * canvasGeometry.scaleY;
 
-        if (selectedResource.state != null) {
+        if (selectedFloorTile.state != null) {
+            const tileX = Math.floor(canvasX / floorTileSize);
+            const tileY = Math.floor(canvasY / floorTileSize);
+
+            level.state.floorTiles.push({
+                name: selectedFloorTile.state.name,
+                img: selectedFloorTile.state.img,
+                x: tileX,
+                y: tileY,
+                sx: selectedFloorTile.state.sx,
+                sy: selectedFloorTile.state.sy,
+            });
+
+            if (!duplicate.state) {
+                selectedFloorTile.state = null;
+            }
+        } else if (selectedResource.state != null) {
             addEntity(
                 selectedResource.state,
                 canvasX,
@@ -250,7 +272,7 @@
         } else {
             //drag and drop / duplicate
             let closestDist = Infinity;
-            let selectedEnt = {};
+            let selected = {};
 
             level.state.entities.forEach((ent) => {
                 let dx = ent.x - canvasX;
@@ -259,23 +281,50 @@
 
                 if (distSqr < 200 && distSqr < closestDist) {
                     closestDist = distSqr;
-                    selectedEnt = ent;
+                    selected = ent;
                 }
             });
 
             if (closestDist != Infinity) {
                 duplicate.state = false;
                 //set clicked entity as selected entity
-                propIsFloorItem = selectedEnt.isFloorItem;
-                propRotation = selectedEnt.rot;
-                propScale = selectedEnt.scale;
-                selectedResource.state = selectedEnt.res;
+                propIsFloorItem = selected.isFloorItem;
+                propRotation = selected.rot;
+                propScale = selected.scale;
+                selectedResource.state = selected.res;
 
                 //then remove it from the entities list for drag n drop behaviour
-                removeEntity(selectedEnt);
+                removeEntity(selected);
+                onmousemove(event);
+                return;
             }
 
-            onmousemove(event);
+            //check if clicked on floor tile
+            level.state.floorTiles.forEach((tile) => {
+                let dx = tile.x * floorTileSize - canvasX + floorTileSize / 2;
+                let dy = tile.y * floorTileSize - canvasY + floorTileSize / 2;
+                let distSqr = dy * dy + dx * dx;
+
+                if (distSqr < 200 && distSqr < closestDist) {
+                    closestDist = distSqr;
+                    selected = tile;
+
+                    let removeIdx = level.state.floorTiles.findIndex(
+                        (_tile) => _tile === tile,
+                    );
+                    level.state.floorTiles.splice(removeIdx, 1);
+                }
+            });
+
+            if (closestDist != Infinity) {
+                duplicate.state = false;
+                selectedFloorTile.state = {
+                    name: selected.name,
+                    img: selected.img,
+                    sx: selected.sx,
+                    sy: selected.sy,
+                };
+            }
         }
     }
 
@@ -292,7 +341,7 @@
 <canvas bind:this={canvas} {onmousemove} {onclick} {onwheel}></canvas>
 
 {#if selectedResource.state != null}
-    <div class="entityProps">
+    <div class="btns">
         <div>
             <div class="inputField">
                 <label>Scale:</label>
@@ -321,6 +370,19 @@
             <FontAwesomeIcon icon={faTrash} />
         </button>
     </div>
+{:else if selectedFloorTile.state != null}
+    <div class="btns">
+        <button
+            class="trashIcon"
+            onclick={(event) => {
+                event.stopPropagation();
+                selectedFloorTile.state = null;
+                draw();
+            }}
+        >
+            <FontAwesomeIcon icon={faTrash} />
+        </button>
+    </div>
 {/if}
 
 <style>
@@ -328,7 +390,7 @@
         image-rendering: pixelated;
     }
 
-    .entityProps {
+    .btns {
         position: fixed;
         bottom: 10px;
         left: 10px;
@@ -338,6 +400,8 @@
         padding: 8px;
         border-radius: 4px;
         box-shadow: 0px 15px 20px -10px;
+        color: rgb(58, 58, 58);
+        gap: 10px;
     }
 
     label {
@@ -357,8 +421,8 @@
         font-size: 28px;
         color: #e67e7e;
         padding: 10px;
-        margin-left: 30px;
-        margin-right: 10px;
+        /* margin-left: 30px;
+        margin-right: 10px; */
         border: 2px solid;
     }
 </style>

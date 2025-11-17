@@ -1,5 +1,5 @@
 <script>
-    import { selectedResource } from "./state.svelte";
+    import { selectedResource, selectedFloorTile } from "./state.svelte";
     import { duplicate } from "./state.svelte";
     
     let  { res } = $props();
@@ -8,6 +8,7 @@
 
     function onclick(evt) {
         selectedResource.state = res;
+        selectedFloorTile.state = null;
         duplicate.state = true;
     }
 </script>

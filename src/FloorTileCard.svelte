@@ -1,14 +1,19 @@
 <script>
-    import { selectedFloorTile } from "./state.svelte";
-    let { tile } = $props();
+    import { selectedFloorTile, selectedResource } from "./state.svelte";
 
-    // $inspect(selectedFloorTile);
+    let { tile } = $props();
 
     let tilesX = Math.floor(tile.width / tile.tileSize);
     let tilesY = Math.floor(tile.height / tile.tileSize);
 
-    function selectTile(name, x, y) {
-        selectedFloorTile.state = { name, x, y };
+    function selectTile(name, img, x, y, tileSize) {
+        selectedFloorTile.state = {
+            name,
+            img,
+            sx: x * tileSize,
+            sy: y * tileSize,
+        };
+        selectedResource.state = null;
     }
 </script>
 
@@ -18,7 +23,7 @@
         {#each { length: tilesY }, j}
             <button
                 onclick={() => {
-                    selectTile(tile.name, i, j);
+                    selectTile(tile.name, tile.img, i, j, tile.tileSize);
                 }}
             >
                 <img

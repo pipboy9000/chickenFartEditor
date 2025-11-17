@@ -4,7 +4,7 @@ export const selectedResource = $state({ state: null });
 
 export const selectedFloorTile = $state({ state: null });
 
-export const level = $state({ state: { resources: [], entities: [] } });
+export const level = $state({ state: { resources: [], entities: [], floorTiles: [] } });
 
 export const duplicate = $state({ state: true });
 
