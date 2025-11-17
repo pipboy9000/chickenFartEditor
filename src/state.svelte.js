@@ -2,6 +2,8 @@ export const resources = $state({ state: { entities: [], floorTiles: [] } });
 
 export const selectedResource = $state({ state: null });
 
+export const selectedFloorTile = $state({ state: null });
+
 export const level = $state({ state: { resources: [], entities: [] } });
 
 export const duplicate = $state({ state: true });
@@ -70,12 +72,14 @@ export async function loadResources() {
 
         Object.keys(data.floorTiles).forEach(name => {
             let img = new Image();
-            img.src = `floorTiles/${name}.json`;
+            img.src = `floorTiles/${name}.png`;
             floorTiles.push({
                 name,
                 img,
                 ...data.floorTiles[name]
             });
+
+
         });
 
         resources.state.floorTiles = floorTiles;

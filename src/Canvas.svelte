@@ -6,6 +6,8 @@
         selectedResource,
         addEntity,
         removeEntity,
+        selectedFloorTile,
+        resources,
     } from "./state.svelte.js";
     import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
     import { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash";
@@ -15,9 +17,10 @@
     let ctx;
     let width, height;
 
+    //default floor tiles
     let floorTiles;
     let floorTilesPng;
-    let floorTileSize = 16;
+    let floorTileSize = 32;
 
     let worldWidth;
     let worldHeight;
@@ -152,14 +155,54 @@
     }
 
     function onmousemove(event) {
-        if (selectedResource.state != null) {
+        const canvasX =
+            (event.clientX - canvasGeometry.left) * canvasGeometry.scaleX;
+        const canvasY =
+            (event.clientY - canvasGeometry.top) * canvasGeometry.scaleY;
+
+        if (selectedFloorTile.state != null) {
             drawFloorTiles();
+
+            const floorTileX = Math.floor(canvasX / floorTileSize);
+            const floorTileY = Math.floor(canvasY / floorTileSize);
+
+            const imgRes = resources.state.floorTiles.find(
+                (res) => res.name === selectedFloorTile.state.name,
+            );
+
+            // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+
+            ctx.save();
+
+            console.log(
+                selectedFloorTile.state.x * floorTileSize,
+                selectedFloorTile.state.y * floorTileSize,
+                floorTileSize,
+                floorTileSize,
+                floorTileX,
+                floorTileY,
+                floorTileSize,
+                floorTileSize,
+            );
+
+            ctx.drawImage(
+                imgRes.img,
+                selectedFloorTile.state.x * floorTileSize,
+                selectedFloorTile.state.y * floorTileSize,
+                floorTileSize,
+                floorTileSize,
+                floorTileX * floorTileSize,
+                floorTileY * floorTileSize,
+                floorTileSize,
+                floorTileSize,
+            );
+
             drawEntities();
 
-            const canvasX =
-                (event.clientX - canvasGeometry.left) * canvasGeometry.scaleX;
-            const canvasY =
-                (event.clientY - canvasGeometry.top) * canvasGeometry.scaleY;
+            ctx.restore();
+        } else if (selectedResource.state != null) {
+            drawFloorTiles();
+            drawEntities();
 
             ctx.save();
 
