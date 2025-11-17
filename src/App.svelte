@@ -12,7 +12,7 @@
   async function initAsync() {
     await loadResources();
     await getLevelFromLocalStorage();
-    setTimeout(canvasEl.draw, 500);
+    setTimeout(canvasEl.draw, 100);
   }
 
   onMount(() => {

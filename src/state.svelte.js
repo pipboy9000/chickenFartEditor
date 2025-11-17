@@ -1,4 +1,4 @@
-export const resources = $state({ state: [] });
+export const resources = $state({ state: { entities: [], floorTiles: [] } });
 
 export const selectedResource = $state({ state: null });
 
@@ -33,7 +33,7 @@ export function loadLevelFromJson(jsonObj) {
 
 
     jsonObj.entities.forEach(ent => {
-        const res = resources.state.find(res => res.name === ent.name);
+        const res = resources.state.entities.find(res => res.name === ent.name);
         addEntity(res, ent.x, ent.y, ent.scale, ent.rot, ent.isFloorItem);
         if (level.state.resources.indexOf(res.name) === -1) level.state.resources.push(res.name);
     });
@@ -50,19 +50,35 @@ export async function loadResources() {
 
         const data = await response.json();
 
-        let res = [];
+        //entities resources
+        let entities = [];
 
-        Object.keys(data).forEach(name => {
+        Object.keys(data.entities).forEach(name => {
             let img = new Image();
-            img.src = `resources/${name}/${name}.png`
-            res.push({
+            img.src = `entities/resources/${name}/${name}.png`
+            entities.push({
                 name,
                 img,
-                ...data[name]
+                ...data.entities[name]
             });
         });
 
-        resources.state = res;
+        resources.state.entities = entities;
+
+        //floor tiles resources
+        let floorTiles = [];
+
+        Object.keys(data.floorTiles).forEach(name => {
+            let img = new Image();
+            img.src = `floorTiles/${name}.json`;
+            floorTiles.push({
+                name,
+                img,
+                ...data.floorTiles[name]
+            });
+        });
+
+        resources.state.floorTiles = floorTiles;
 
     } catch (e) {
         console.error("Failed to load resources:", e);

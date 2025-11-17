@@ -1,10 +1,11 @@
 <script>
     import EntityCard from "./EntityCard.svelte";
-    import { resources, selectedResource } from "./state.svelte.js";
+    import { resources } from "./state.svelte.js";
+
 </script>
 
 <div class="entities-list">
-    {#each resources.state as entity}
+    {#each resources.state.entities as entity}
         <EntityCard res={entity} />
     {/each}
 </div>

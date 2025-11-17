@@ -1,7 +1,10 @@
 <script>
     import { selectedResource } from "./state.svelte";
     import { duplicate } from "./state.svelte";
-    export let res;
+    
+    let  { res } = $props();
+
+    // $inspect(res);
 
     function onclick(evt) {
         selectedResource.state = res;
@@ -13,7 +16,7 @@
     <h3>{res.name}</h3>
     <img
         style={`width:${res.width}px; height:${res.height}px`}
-        src={`resources/${res.name}/${res.name}.png`}
+        src={`entities/resources/${res.name}/${res.name}.png`}
         alt=""
     />
 </button>

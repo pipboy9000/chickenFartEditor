@@ -48,7 +48,7 @@
         canvasGeometry.left = rect.left;
         canvasGeometry.top = rect.top;
 
-        loadFloorTiles("grass", 16, width + 100, height + 100, "level1");
+        loadFloorTiles("grass", 32, width + 100, height + 100, "level1");
     });
 
     $effect(() => {
@@ -75,9 +75,9 @@
 
         await new Promise((resolve, reject) => {
             floorTilesPng.onload = () => resolve();
-            floorTilesPng.onerror = () =>
-                reject(new Error("Failed to load image"));
-            floorTilesPng.src = `${assetName}.png`;
+            floorTilesPng.onerror = (err) =>
+                reject(new Error("Failed to load image", err));
+            floorTilesPng.src = `floorTiles/${assetName}.png`;
         });
 
         //generate grass tiles
@@ -87,8 +87,7 @@
         for (let x = 0; x < tilesX; x++) {
             let row = [];
             for (let y = 0; y < tilesY; y++) {
-                let r = Math.floor(random() * 50); //inc 50 for more empty space
-                if (r > 8) r = 3; //3 is plain grass
+                let r = Math.floor(random() * 8 * 8);
                 row.push(r);
             }
             floorTiles.push(row);
@@ -103,8 +102,8 @@
     function drawFloorTiles() {
         floorTiles.forEach((row, x) => {
             row.forEach((tile, y) => {
-                const sx = (tile % 3) * floorTileSize;
-                const sy = Math.floor(tile / 3) * floorTileSize;
+                const sx = (tile % 8) * floorTileSize;
+                const sy = Math.floor(tile / 8) * floorTileSize;
                 ctx.drawImage(
                     floorTilesPng,
                     sx,
@@ -131,8 +130,13 @@
             ctx.rotate(ent.rot);
 
             try {
+                //drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
                 ctx.drawImage(
                     ent.res.img,
+                    0,
+                    0,
+                    ent.res.width,
+                    ent.res.height,
                     -ent.res.anchorX,
                     -ent.res.anchorY,
                     ent.res.width,
