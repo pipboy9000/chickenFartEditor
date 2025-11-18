@@ -90,5 +90,6 @@
         background-color: #8bf188;
         color: #474747;
         width: 180px;
+            justify-content: center;
     }
 </style>

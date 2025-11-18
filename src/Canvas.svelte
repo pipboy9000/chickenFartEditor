@@ -9,6 +9,7 @@
         selectedFloorTile,
         resources,
         saveLevelToLocalStorage,
+        addFloorTile,
     } from "./state.svelte.js";
     import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
     import { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash";
@@ -107,23 +108,25 @@
 
     function drawFloorTiles() {
         //default tiles
-        floorTiles.forEach((row, x) => {
-            row.forEach((tile, y) => {
-                const sx = (tile % 8) * floorTileSize;
-                const sy = Math.floor(tile / 8) * floorTileSize;
-                ctx.drawImage(
-                    floorTilesPng,
-                    sx,
-                    sy,
-                    floorTileSize,
-                    floorTileSize,
-                    x * floorTileSize,
-                    y * floorTileSize,
-                    floorTileSize,
-                    floorTileSize,
-                );
+        if (floorTiles) {
+            floorTiles.forEach((row, x) => {
+                row.forEach((tile, y) => {
+                    const sx = (tile % 8) * floorTileSize;
+                    const sy = Math.floor(tile / 8) * floorTileSize;
+                    ctx.drawImage(
+                        floorTilesPng,
+                        sx,
+                        sy,
+                        floorTileSize,
+                        floorTileSize,
+                        x * floorTileSize,
+                        y * floorTileSize,
+                        floorTileSize,
+                        floorTileSize,
+                    );
+                });
             });
-        });
+        }
 
         //set tiles
         level.state.floorTiles.forEach((tile) => {
@@ -241,21 +244,7 @@
         if (selectedFloorTile.state != null) {
             const tileX = Math.floor(canvasX / floorTileSize);
             const tileY = Math.floor(canvasY / floorTileSize);
-
-            level.state.floorTiles.push({
-                name: selectedFloorTile.state.name,
-                img: selectedFloorTile.state.img,
-                x: tileX,
-                y: tileY,
-                sx: selectedFloorTile.state.sx,
-                sy: selectedFloorTile.state.sy,
-            });
-
-            if (!duplicate.state) {
-                selectedFloorTile.state = null;
-            }
-
-            saveLevelToLocalStorage();
+            addFloorTile(tileX, tileY);
         } else if (selectedResource.state != null) {
             addEntity(
                 selectedResource.state,
@@ -295,7 +284,10 @@
 
                 //then remove it from the entities list for drag n drop behaviour
                 removeEntity(selected);
-                onmousemove(event);
+                setTimeout(() => {
+                    onmousemove(event);
+                }, 150);
+                draw();
                 return;
             }
 
@@ -337,6 +329,16 @@
         console.log(key);
     }
 </script>
+
+<svelte:window
+    on:keydown|escape={(e) => {
+        if (e.key === "Escape") {
+            selectedFloorTile.state = null;
+            selectedResource.state = null;
+            draw();
+        }
+    }}
+/>
 
 <canvas bind:this={canvas} {onmousemove} {onclick} {onwheel}></canvas>
 

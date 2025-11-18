@@ -41,8 +41,6 @@ export function loadLevelFromJson(jsonObj) {
         if (level.state.resources.indexOf(res.name) === -1) level.state.resources.push(res.name);
     });
 
-    // level.state.floorTiles = jsonObj.floorTiles;
-
     jsonObj.floorTiles.forEach(tile => {
         let res = resources.state.floorTiles.find(tileRes => tileRes.name === tile.name);
         tile.img = res.img;
@@ -142,6 +140,25 @@ export function removeEntity(entity) {
         idx = level.state.resources.indexOf(entity.res.name);
         level.state.resources.splice(idx, 1);
     }
+
+    saveLevelToLocalStorage();
+}
+
+export function addFloorTile(tileX, tileY) {
+    level.state.floorTiles.push({
+        name: selectedFloorTile.state.name,
+        img: selectedFloorTile.state.img,
+        x: tileX,
+        y: tileY,
+        sx: selectedFloorTile.state.sx,
+        sy: selectedFloorTile.state.sy,
+    });
+
+    if (!duplicate.state) {
+        selectedFloorTile.state = null;
+    }
+
+    saveLevelToLocalStorage();
 }
 
 export async function getLevelFromLocalStorage() {

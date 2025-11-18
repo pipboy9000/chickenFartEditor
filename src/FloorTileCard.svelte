@@ -1,5 +1,5 @@
 <script>
-    import { selectedFloorTile, selectedResource } from "./state.svelte";
+    import { duplicate, selectedFloorTile, selectedResource } from "./state.svelte";
 
     let { tile } = $props();
 
@@ -14,6 +14,7 @@
             sy: y * tileSize,
         };
         selectedResource.state = null;
+        duplicate.state = true;
     }
 </script>
 
