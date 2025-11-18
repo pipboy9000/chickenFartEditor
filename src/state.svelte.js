@@ -10,7 +10,7 @@ export const duplicate = $state({ state: true });
 
 export function getLevelJson() {
 
-    let newObj = { entities: [] };
+    let newObj = { entities: [], floorTiles: [] };
 
     level.state.entities.forEach(ent => {
         newObj.entities.push({
@@ -23,6 +23,8 @@ export function getLevelJson() {
         })
     });
 
+    newObj.floorTiles = level.state.floorTiles;
+
     newObj.resources = level.state.resources;
 
     return JSON.stringify(newObj);
@@ -33,12 +35,20 @@ export function loadLevelFromJson(jsonObj) {
     level.state.entities = [];
     level.state.resources = [];
 
-
     jsonObj.entities.forEach(ent => {
         const res = resources.state.entities.find(res => res.name === ent.name);
         addEntity(res, ent.x, ent.y, ent.scale, ent.rot, ent.isFloorItem);
         if (level.state.resources.indexOf(res.name) === -1) level.state.resources.push(res.name);
     });
+
+    // level.state.floorTiles = jsonObj.floorTiles;
+
+    jsonObj.floorTiles.forEach(tile => {
+        let res = resources.state.floorTiles.find(tileRes => tileRes.name === tile.name);
+        tile.img = res.img;
+    });
+
+    level.state.floorTiles = jsonObj.floorTiles;
 }
 
 export async function loadResources() {

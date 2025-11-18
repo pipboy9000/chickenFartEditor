@@ -8,6 +8,7 @@
         removeEntity,
         selectedFloorTile,
         resources,
+        saveLevelToLocalStorage,
     } from "./state.svelte.js";
     import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
     import { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash";
@@ -126,11 +127,8 @@
 
         //set tiles
         level.state.floorTiles.forEach((tile) => {
-            const imgRes = resources.state.floorTiles.find(
-                (_tile) => _tile.name === tile.name,
-            ).img;
             ctx.drawImage(
-                imgRes,
+                tile.img,
                 tile.sx,
                 tile.sy,
                 floorTileSize,
@@ -256,6 +254,8 @@
             if (!duplicate.state) {
                 selectedFloorTile.state = null;
             }
+
+            saveLevelToLocalStorage();
         } else if (selectedResource.state != null) {
             addEntity(
                 selectedResource.state,
