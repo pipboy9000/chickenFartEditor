@@ -18,6 +18,8 @@
     let canvas;
     let ctx;
     let width, height;
+    let camX = 0,
+        camY = 0;
 
     //default floor tiles
     let floorTiles;
@@ -34,8 +36,6 @@
     let propRotation = $state(0);
     let propScale = $state(1);
     let propIsFloorItem = $state(false);
-
-    $inspect(selectedFloorTile);
 
     onMount(() => {
         canvas.width = window.innerWidth;
@@ -59,10 +59,22 @@
     });
 
     $effect(() => {
-        if (level.state.entities.length > 0) draw();
+        draw();
     });
 
+    function updateCam() {
+        draw();
+    }
+    
+    function clearCanvas() {
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, width, height);
+    }
+    
     export function draw() {
+        clearCanvas();
+        ctx.setTransform(1, 0, 0, 1, camX, camY);
         drawFloorTiles();
         drawEntities();
     }
@@ -245,6 +257,7 @@
             const tileX = Math.floor(canvasX / floorTileSize);
             const tileY = Math.floor(canvasY / floorTileSize);
             addFloorTile(tileX, tileY);
+            saveLevelToLocalStorage();
         } else if (selectedResource.state != null) {
             addEntity(
                 selectedResource.state,
@@ -254,6 +267,8 @@
                 propRotation,
                 propIsFloorItem,
             );
+
+            saveLevelToLocalStorage();
 
             if (!duplicate.state) {
                 selectedResource.state = null;
@@ -284,6 +299,7 @@
 
                 //then remove it from the entities list for drag n drop behaviour
                 removeEntity(selected);
+                saveLevelToLocalStorage();
                 setTimeout(() => {
                     onmousemove(event);
                 }, 150);
@@ -325,17 +341,34 @@
         onmousemove(event);
     }
 
-    function onkeydown(key) {
-        console.log(key);
-    }
+    function onkeydown(key) {}
 </script>
 
 <svelte:window
     on:keydown|escape={(e) => {
+        console.log(e.key);
+
         if (e.key === "Escape") {
             selectedFloorTile.state = null;
             selectedResource.state = null;
             draw();
+        }
+
+        if (e.key === "ArrowRight") {
+            camX -= 4;
+            updateCam();
+        }
+        if (e.key === "ArrowUp") {
+            camY += 4;
+            updateCam();
+        }
+        if (e.key === "ArrowLeft") {
+            camX += 4;
+            updateCam();
+        }
+        if (e.key === "ArrowDown") {
+            camY -= 4;
+            updateCam();
         }
     }}
 />

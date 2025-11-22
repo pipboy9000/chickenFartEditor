@@ -123,8 +123,6 @@ export function addEntity(res, x, y, scale, rot, isFloorItem) {
         }
         return a.y - b.y;
     });
-
-    saveLevelToLocalStorage();
 }
 
 export function removeEntity(entity) {
@@ -140,8 +138,6 @@ export function removeEntity(entity) {
         idx = level.state.resources.indexOf(entity.res.name);
         level.state.resources.splice(idx, 1);
     }
-
-    saveLevelToLocalStorage();
 }
 
 export function addFloorTile(tileX, tileY) {
@@ -157,8 +153,6 @@ export function addFloorTile(tileX, tileY) {
     if (!duplicate.state) {
         selectedFloorTile.state = null;
     }
-
-    saveLevelToLocalStorage();
 }
 
 export async function getLevelFromLocalStorage() {

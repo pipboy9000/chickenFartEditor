@@ -1,6 +1,6 @@
 <script>
     import { on } from "svelte/events";
-    import { level, loadLevelFromJson, getLevelJson } from "./state.svelte";
+    import { level, loadLevelFromJson, getLevelJson, saveLevelToLocalStorage } from "./state.svelte";
     import { onMount } from "svelte";
 
     let { hideCodePopup } = $props();
@@ -20,6 +20,7 @@
         try {
             let jsonObj = JSON.parse(text);
             loadLevelFromJson(jsonObj);
+            saveLevelToLocalStorage();
             hideCodePopup();
         } catch {
             err = true;
