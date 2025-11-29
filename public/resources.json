@@ -155,6 +155,27 @@
         "height": 18
       }
     },
+    "Crystal": {
+      "width": 16,
+      "height": 16,
+      "anchorX": 8,
+      "anchorY": 13,
+      "states": [
+        "idle",
+        "pickup"
+      ],
+      "animations": {
+        "idle": {
+          "length": 6
+        },
+        "pickup": {
+          "length": 5,
+          "events": {
+            "4": "end"
+          }
+        }
+      }
+    },
     "Cube1": {
       "width": 32,
       "height": 46,
@@ -309,6 +330,52 @@
       "collision": {
         "type": "circle",
         "rad": 8
+      }
+    },
+    "Rabbit": {
+      "width": 128,
+      "height": 128,
+      "anchorX": 64,
+      "anchorY": 75,
+      "states": [
+        "idle",
+        "idleLeft",
+        "idleRight",
+        "idleUp",
+        "jumpDown",
+        "jumpLeft",
+        "jumpRight",
+        "jumpUp"
+      ],
+      "animations": {
+        "idle": {
+          "length": 4
+        },
+        "idleLeft": {
+          "length": 4
+        },
+        "idleRight": {
+          "length": 4
+        },
+        "idleUp": {
+          "length": 4
+        },
+        "jumpDown": {
+          "length": 6
+        },
+        "jumpLeft": {
+          "length": 6
+        },
+        "jumpRight": {
+          "length": 6
+        },
+        "jumpUp": {
+          "length": 6
+        }
+      },
+      "collision": {
+        "type": "circle",
+        "rad": 5
       }
     },
     "Rock1": {
@@ -571,6 +638,20 @@
         }
       }
     },
+    "Torch": {
+      "width": 16,
+      "height": 16,
+      "anchorX": 8,
+      "anchorY": 20,
+      "states": [
+        "idle"
+      ],
+      "animations": {
+        "idle": {
+          "length": 5
+        }
+      }
+    },
     "Tree10": {
       "width": 54,
       "height": 70,
@@ -604,6 +685,48 @@
       "height": 47,
       "anchorX": 16,
       "anchorY": 40,
+      "states": [
+        "idle"
+      ],
+      "animations": {
+        "idle": {
+          "length": 1
+        }
+      }
+    },
+    "Tree13": {
+      "width": 113,
+      "height": 139,
+      "anchorX": 56,
+      "anchorY": 134,
+      "states": [
+        "idle"
+      ],
+      "animations": {
+        "idle": {
+          "length": 1
+        }
+      }
+    },
+    "Tree14": {
+      "width": 97,
+      "height": 136,
+      "anchorX": 46,
+      "anchorY": 131,
+      "states": [
+        "idle"
+      ],
+      "animations": {
+        "idle": {
+          "length": 1
+        }
+      }
+    },
+    "Tree15": {
+      "width": 79,
+      "height": 120,
+      "anchorX": 41,
+      "anchorY": 114,
       "states": [
         "idle"
       ],
@@ -716,6 +839,34 @@
       "height": 70,
       "anchorX": 27.5,
       "anchorY": 54,
+      "states": [
+        "idle"
+      ],
+      "animations": {
+        "idle": {
+          "length": 1
+        }
+      }
+    },
+    "Wand": {
+      "width": 20,
+      "height": 56,
+      "anchorX": 10,
+      "anchorY": 46,
+      "states": [
+        "idle"
+      ],
+      "animations": {
+        "idle": {
+          "length": 1
+        }
+      }
+    },
+    "Wand2": {
+      "width": 20,
+      "height": 54,
+      "anchorX": 7,
+      "anchorY": 44,
       "states": [
         "idle"
       ],
