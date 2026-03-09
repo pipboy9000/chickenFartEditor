@@ -117,7 +117,6 @@
         height,
         levelStr,
     ) {
-        floorTileSize = tileSize;
 
         const random = seededRandom(seed + "-" + levelStr);
 
@@ -132,8 +131,8 @@
 
         //generate grass tiles
         floorTiles = [];
-        const tilesX = Math.ceil(width / floorTileSize);
-        const tilesY = Math.ceil(height / floorTileSize);
+        const tilesX = Math.ceil(width / tileSize);
+        const tilesY = Math.ceil(height / tileSize);
         for (let x = 0; x < tilesX; x++) {
             let row = [];
             for (let y = 0; y < tilesY; y++) {
@@ -143,8 +142,8 @@
             floorTiles.push(row);
         }
 
-        worldWidth = tilesX * floorTileSize;
-        worldHeight = tilesY * floorTileSize;
+        worldWidth = tilesX * tileSize;
+        worldHeight = tilesY * tileSize;
 
         draw();
     }
