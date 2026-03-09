@@ -4,9 +4,11 @@ export const selectedResource = $state({ state: null });
 
 export const selectedFloorTile = $state({ state: null });
 
-export const level = $state({ state: { resources: [], entities: [], floorTiles: [] } });
+export const level = $state({ state: { resources: [], entities: [], floorTiles: [], settings: { width: 800, height: 800 } } });
 
 export const duplicate = $state({ state: true });
+
+export const snapToGrid = $state({ state: false });
 
 export function getLevelJson() {
 
@@ -26,6 +28,8 @@ export function getLevelJson() {
     newObj.floorTiles = level.state.floorTiles;
 
     newObj.resources = level.state.resources;
+
+    newObj.settings = level.state.settings;
 
     return JSON.stringify(newObj);
 }
@@ -47,6 +51,8 @@ export function loadLevelFromJson(jsonObj) {
     });
 
     level.state.floorTiles = jsonObj.floorTiles;
+
+    level.state.settings = jsonObj.settings;
 }
 
 export async function loadResources() {

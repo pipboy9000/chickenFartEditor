@@ -5,8 +5,10 @@
   import { loadResources, getLevelFromLocalStorage } from "./state.svelte.js";
   import TopBar from "./TopBar.svelte";
   import CodePopup from "./CodePopup.svelte";
+  import SettingsPopup from "./SettingsPopup.svelte";
 
   let showCode = false;
+  let showSettings = false;
   let canvasEl;
 
   async function initAsync() {
@@ -26,14 +28,26 @@
   function hideCodePopup() {
     showCode = false;
   }
+
+  function showSettingsPopup() {
+    showSettings = true;
+  }
+
+  function hideSettingsPopup() {
+    showSettings = false;
+  }
 </script>
 
 <main>
   <Canvas bind:this={canvasEl} />
-  <TopBar {showCodePopup} />
+  <TopBar {showCodePopup} {showSettingsPopup} />
   <SideBar />
   {#if showCode}
     <CodePopup {hideCodePopup} />
+  {/if}
+
+  {#if showSettings}
+    <SettingsPopup {hideSettingsPopup} />
   {/if}
 </main>
 

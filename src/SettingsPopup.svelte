@@ -1,26 +1,20 @@
 <script>
-    import { loadLevelFromJson, getLevelJson, saveLevelToLocalStorage } from "./state.svelte";
     import { onMount } from "svelte";
+    import { level, saveLevelToLocalStorage } from "./state.svelte";
 
-    let { hideCodePopup } = $props();
-
-    let text = $state("");
+    let { hideSettingsPopup } = $props();
 
     let err = $state(false);
 
     $inspect(err);
 
-    onMount(() => {
-        text = getLevelJson();
-    });
+    onMount(() => {});
 
     function validateAndSave() {
         err = false;
         try {
-            let jsonObj = JSON.parse(text);
-            loadLevelFromJson(jsonObj);
             saveLevelToLocalStorage();
-            hideCodePopup();
+            hideSettingsPopup();
         } catch {
             err = true;
         }
@@ -29,24 +23,39 @@
 
 <div
     class="bg"
-    onclick={hideCodePopup}
+    onclick={hideSettingsPopup}
     role="button"
     tabindex="0"
-    onkeydown={(e) => (e.key === "Enter" || e.key === " ") && hideCodePopup()}
+    onkeydown={(e) => hideSettingsPopup()}
     aria-label="Close popup"
 >
-    <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <!-- svelte-ignore a11y_click_events_have_key_events -->
     <div
         class="popup"
         onclick={(e) => e.stopPropagation()}
+        onkeydown={(e) => {
+            e.stopPropagation();
+            e.key === "Escape" && hideSettingsPopup();
+        }}
+        role="dialog"
+        aria-label="Settings popup"
+        tabindex="0"
     >
-        <textarea
-            name=""
-            id=""
-            style={err ? "border: 2px solid red" : ""}
-            bind:value={text}
-        ></textarea>
+        <label for="">World Width</label>
+        <input
+            type="number"
+            bind:value={level.state.settings.width}
+            step="32"
+            min="256"
+        />
+
+        <label for="">World Height</label>
+        <input
+            type="number"
+            bind:value={level.state.settings.height}
+            step="32"
+            min="256"
+        />
+
         <button type="button" onclick={validateAndSave}> Save </button>
     </div>
 </div>
@@ -77,19 +86,15 @@
         box-shadow: 0px 10px 20px -10px black;
     }
 
-    textarea {
-        width: 420px;
-        height: 300px;
-        border-radius: 12px;
-        border: none;
-        background: #e1e1e1;
-        margin-bottom: 20px;
-    }
-
     button {
         background-color: #8bf188;
         color: #474747;
         width: 180px;
-            justify-content: center;
+        justify-content: center;
+    }
+
+    label {
+        margin-bottom: 6px;
+        color: black;
     }
 </style>

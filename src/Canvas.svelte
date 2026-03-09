@@ -10,6 +10,7 @@
         resources,
         saveLevelToLocalStorage,
         addFloorTile,
+        snapToGrid,
     } from "./state.svelte.js";
     import { FontAwesomeIcon } from "@fortawesome/svelte-fontawesome";
     import { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash";
@@ -55,28 +56,58 @@
         canvasGeometry.left = rect.left;
         canvasGeometry.top = rect.top;
 
-        loadFloorTiles("grass", 32, width + 100, height + 100, "level1");
+        loadFloorTiles(
+            "grass",
+            32,
+            level.state.settings.width,
+            level.state.settings.height,
+            "level1",
+        );
     });
 
     $effect(() => {
         draw();
     });
 
+    $effect(() => {
+        loadFloorTiles(
+            "grass",
+            32,
+            level.state.settings.width,
+            level.state.settings.height,
+            "level1",
+        );
+    });
+
     function updateCam() {
         draw();
     }
-    
+
     function clearCanvas() {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, width, height);
     }
-    
+
     export function draw() {
         clearCanvas();
         ctx.setTransform(1, 0, 0, 1, camX, camY);
         drawFloorTiles();
         drawEntities();
+        drawBounds();
+    }
+
+    function drawBounds() {
+        ctx.save();
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(
+            0,
+            0,
+            level.state.settings.width,
+            level.state.settings.height,
+        );
+        ctx.restore();
     }
 
     async function loadFloorTiles(
@@ -189,13 +220,14 @@
     }
 
     function onmousemove(event) {
-        const canvasX =
-            (event.clientX - canvasGeometry.left) * canvasGeometry.scaleX;
-        const canvasY =
-            (event.clientY - canvasGeometry.top) * canvasGeometry.scaleY;
+        let canvasX =
+            (event.clientX - canvasGeometry.left) * canvasGeometry.scaleX -
+            camX;
+        let canvasY =
+            (event.clientY - canvasGeometry.top) * canvasGeometry.scaleY - camY;
 
         if (selectedFloorTile.state != null) {
-            drawFloorTiles();
+            draw();
 
             const floorTileX = Math.floor(canvasX / floorTileSize);
             const floorTileY = Math.floor(canvasY / floorTileSize);
@@ -220,10 +252,14 @@
 
             ctx.restore();
         } else if (selectedResource.state != null) {
-            drawFloorTiles();
-            drawEntities();
+            draw();
 
             ctx.save();
+
+            if (snapToGrid.state) {
+                canvasX = Math.round(canvasX / 10) * 10;
+                canvasY = Math.round(canvasY / 10) * 10;
+            }
 
             ctx.translate(canvasX, canvasY);
 
@@ -248,10 +284,16 @@
     }
 
     function onclick(event) {
-        const canvasX =
-            (event.clientX - canvasGeometry.left) * canvasGeometry.scaleX;
-        const canvasY =
-            (event.clientY - canvasGeometry.top) * canvasGeometry.scaleY;
+        let canvasX =
+            (event.clientX - canvasGeometry.left) * canvasGeometry.scaleX -
+            camX;
+        let canvasY =
+            (event.clientY - canvasGeometry.top) * canvasGeometry.scaleY - camY;
+
+        if (snapToGrid.state) {
+            canvasX = Math.round(canvasX / 10) * 10;
+            canvasY = Math.round(canvasY / 10) * 10;
+        }
 
         if (selectedFloorTile.state != null) {
             const tileX = Math.floor(canvasX / floorTileSize);
@@ -340,8 +382,6 @@
         propScale += event.deltaY * 0.01;
         onmousemove(event);
     }
-
-    function onkeydown(key) {}
 </script>
 
 <svelte:window
@@ -355,19 +395,19 @@
         }
 
         if (e.key === "ArrowRight") {
-            camX -= 4;
+            camX -= 32;
             updateCam();
         }
         if (e.key === "ArrowUp") {
-            camY += 4;
+            camY += 32;
             updateCam();
         }
         if (e.key === "ArrowLeft") {
-            camX += 4;
+            camX += 32;
             updateCam();
         }
         if (e.key === "ArrowDown") {
-            camY -= 4;
+            camY -= 32;
             updateCam();
         }
     }}
