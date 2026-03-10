@@ -38,6 +38,9 @@
     let propScale = $state(1);
     let propIsFloorItem = $state(false);
 
+    let isPanning = $state(false);
+    let panStart = { x: 0, y: 0 };
+
     onMount(() => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
@@ -63,6 +66,9 @@
             level.state.settings.height,
             "level1",
         );
+
+        camX = width / 2 - level.state.settings.width / 2;
+        camY = height / 2 - level.state.settings.height / 2;
     });
 
     $effect(() => {
@@ -117,7 +123,6 @@
         height,
         levelStr,
     ) {
-
         const random = seededRandom(seed + "-" + levelStr);
 
         floorTilesPng = new Image();
@@ -224,6 +229,15 @@
             camX;
         let canvasY =
             (event.clientY - canvasGeometry.top) * canvasGeometry.scaleY - camY;
+
+        if (isPanning) {
+            camX += event.clientX - panStart.x;
+            camY += event.clientY - panStart.y;
+            panStart.x = event.clientX;
+            panStart.y = event.clientY;
+            updateCam();
+            // return;
+        }
 
         if (selectedFloorTile.state != null) {
             draw();
@@ -378,9 +392,37 @@
     }
 
     function onwheel(event) {
-        propScale += event.deltaY * 0.01;
+        event.deltaY > 0 ? (propScale -= 0.1) : (propScale += 0.1);
         onmousemove(event);
     }
+
+    function onmousedown(event) {
+        console.log(event.button);
+        if (event.button === 2) {
+            selectedResource.state = null;
+            selectedFloorTile.state = null;
+            draw();
+        }
+
+        if (event.button === 1) {
+            isPanning = true;
+            panStart.x = event.clientX;
+            panStart.y = event.clientY;
+        }
+    }
+
+    function onmouseup(event) {
+        if (event.button === 1) {
+            isPanning = false;
+            draw();
+        }
+    }
+
+    function oncontextmenu(event) {
+        event.preventDefault();
+    }
+
+    $inspect(isPanning);
 </script>
 
 <svelte:window
@@ -412,7 +454,16 @@
     }}
 />
 
-<canvas bind:this={canvas} {onmousemove} {onclick} {onwheel}></canvas>
+<canvas
+    bind:this={canvas}
+    {onmousemove}
+    {onclick}
+    {onwheel}
+    {onmousedown}
+    {onmouseup}
+    {oncontextmenu}
+    class={isPanning ? "panning" : ""}
+></canvas>
 
 {#if selectedResource.state != null}
     <div class="btns">
@@ -462,6 +513,10 @@
 <style>
     canvas {
         image-rendering: pixelated;
+    }
+
+    .panning {
+        cursor: grabbing;
     }
 
     .btns {
