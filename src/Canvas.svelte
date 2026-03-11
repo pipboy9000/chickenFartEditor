@@ -392,6 +392,7 @@
         if (event.button === 2) {
             selectedResource.state = null;
             selectedFloorTile.state = null;
+            saveLevelToLocalStorage();
             draw();
         }
 
