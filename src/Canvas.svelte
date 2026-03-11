@@ -41,6 +41,9 @@
     let isPanning = $state(false);
     let panStart = { x: 0, y: 0 };
 
+    let canvasMouseX = 0,
+        canvasMouseY = 0;
+
     onMount(() => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
@@ -85,10 +88,6 @@
         );
     });
 
-    function updateCam() {
-        draw();
-    }
-
     function clearCanvas() {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.fillStyle = "black";
@@ -101,6 +100,7 @@
         drawFloorTiles();
         drawEntities();
         drawBounds();
+        drawMouse();
     }
 
     function drawBounds() {
@@ -223,31 +223,10 @@
         });
     }
 
-    function onmousemove(event) {
-        let canvasX =
-            (event.clientX - canvasGeometry.left) * canvasGeometry.scaleX -
-            camX;
-        let canvasY =
-            (event.clientY - canvasGeometry.top) * canvasGeometry.scaleY - camY;
-
-        if (isPanning) {
-            camX += event.clientX - panStart.x;
-            camY += event.clientY - panStart.y;
-            panStart.x = event.clientX;
-            panStart.y = event.clientY;
-            updateCam();
-            // return;
-        }
-
+    function drawMouse() {
         if (selectedFloorTile.state != null) {
-            draw();
-
-            const floorTileX = Math.floor(canvasX / floorTileSize);
-            const floorTileY = Math.floor(canvasY / floorTileSize);
-
-            // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
-
-            ctx.save();
+            const floorTileX = Math.floor(canvasMouseX / floorTileSize);
+            const floorTileY = Math.floor(canvasMouseY / floorTileSize);
 
             ctx.drawImage(
                 selectedFloorTile.state.img,
@@ -260,21 +239,13 @@
                 floorTileSize,
                 floorTileSize,
             );
-
-            drawEntities();
-
-            ctx.restore();
         } else if (selectedResource.state != null) {
-            draw();
-
-            ctx.save();
-
             if (snapToGrid.state) {
-                canvasX = Math.round(canvasX / 10) * 10;
-                canvasY = Math.round(canvasY / 10) * 10;
+                canvasMouseX = Math.round(canvasMouseX / 10) * 10;
+                canvasMouseY = Math.round(canvasMouseY / 10) * 10;
             }
 
-            ctx.translate(canvasX, canvasY);
+            ctx.translate(canvasMouseX, canvasMouseY);
 
             ctx.scale(propScale, propScale);
 
@@ -291,33 +262,45 @@
                 selectedResource.state.width,
                 selectedResource.state.height,
             );
-
-            ctx.restore();
         }
     }
 
-    function onclick(event) {
-        let canvasX =
+    function onmousemove(event) {
+        canvasMouseX =
             (event.clientX - canvasGeometry.left) * canvasGeometry.scaleX -
             camX;
-        let canvasY =
+        canvasMouseY =
             (event.clientY - canvasGeometry.top) * canvasGeometry.scaleY - camY;
 
+        console.log(canvasMouseX, canvasMouseY);
+
+        if (isPanning) {
+            camX += event.clientX - panStart.x;
+            camY += event.clientY - panStart.y;
+            panStart.x = event.clientX;
+            panStart.y = event.clientY;
+        }
+
+        draw();
+    }
+
+    function onclick(event) {
+
         if (snapToGrid.state) {
-            canvasX = Math.round(canvasX / 10) * 10;
-            canvasY = Math.round(canvasY / 10) * 10;
+            canvasMouseX = Math.round(canvasMouseX / 10) * 10;
+            canvasMouseY = Math.round(canvasMouseY / 10) * 10;
         }
 
         if (selectedFloorTile.state != null) {
-            const tileX = Math.floor(canvasX / floorTileSize);
-            const tileY = Math.floor(canvasY / floorTileSize);
+            const tileX = Math.floor(canvasMouseX / floorTileSize);
+            const tileY = Math.floor(canvasMouseY / floorTileSize);
             addFloorTile(tileX, tileY);
             saveLevelToLocalStorage();
         } else if (selectedResource.state != null) {
             addEntity(
                 selectedResource.state,
-                canvasX,
-                canvasY,
+                canvasMouseX,
+                canvasMouseY,
                 propScale,
                 propRotation,
                 propIsFloorItem,
@@ -334,8 +317,8 @@
             let selected = {};
 
             level.state.entities.forEach((ent) => {
-                let dx = ent.x - canvasX;
-                let dy = ent.y - canvasY;
+                let dx = ent.x - canvasMouseX;
+                let dy = ent.y - canvasMouseY;
                 let distSqr = dy * dy + dx * dx;
 
                 if (distSqr < 200 && distSqr < closestDist) {
@@ -364,8 +347,8 @@
 
             //check if clicked on floor tile
             level.state.floorTiles.forEach((tile) => {
-                let dx = tile.x * floorTileSize - canvasX + floorTileSize / 2;
-                let dy = tile.y * floorTileSize - canvasY + floorTileSize / 2;
+                let dx = tile.x * floorTileSize - canvasMouseX + floorTileSize / 2;
+                let dy = tile.y * floorTileSize - canvasMouseY + floorTileSize / 2;
                 let distSqr = dy * dy + dx * dx;
 
                 if (distSqr < 200 && distSqr < closestDist) {
@@ -388,12 +371,20 @@
                     sy: selected.sy,
                 };
             }
+
+            draw();
         }
     }
 
     function onwheel(event) {
-        event.deltaY > 0 ? (propScale -= 0.1) : (propScale += 0.1);
-        onmousemove(event);
+        if (selectedResource.state != null) {
+            event.deltaY > 0 ? (propScale -= 0.1) : (propScale += 0.1);
+            draw();
+        } else {
+            camY -= event.deltaY;
+            camX -= event.deltaX;
+            draw();
+        }
     }
 
     function onmousedown(event) {
@@ -437,19 +428,19 @@
 
         if (e.key === "ArrowRight") {
             camX -= 32;
-            updateCam();
+            draw();
         }
         if (e.key === "ArrowUp") {
             camY += 32;
-            updateCam();
+            draw();
         }
         if (e.key === "ArrowLeft") {
             camX += 32;
-            updateCam();
+            draw();
         }
         if (e.key === "ArrowDown") {
             camY -= 32;
-            updateCam();
+            draw();
         }
     }}
 />
