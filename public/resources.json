@@ -128,9 +128,9 @@
       },
       "collision": {
         "type": "AABB",
-        "x": -16,
+        "x": -8,
         "y": -10,
-        "width": 32,
+        "width": 16,
         "height": 16
       }
     },
@@ -149,9 +149,9 @@
       },
       "collision": {
         "type": "AABB",
-        "x": -16,
+        "x": -8,
         "y": -18,
-        "width": 32,
+        "width": 16,
         "height": 18
       }
     },
@@ -239,7 +239,51 @@
         }
       }
     },
-    "LuneBlade": {
+    "Orc": {
+      "width": 48,
+      "height": 39,
+      "anchorX": 20,
+      "anchorY": 20,
+      "states": [
+        "idle",
+        "walk",
+        "attack1",
+        "attack2",
+        "hit",
+        "death"
+      ],
+      "animations": {
+        "idle": {
+          "length": 6
+        },
+        "walk": {
+          "length": 6
+        },
+        "attack1": {
+          "length": 6,
+          "events": {
+            "4": "attack1"
+          }
+        },
+        "attack2": {
+          "length": 6
+        },
+        "hit": {
+          "length": 4
+        },
+        "death": {
+          "length": 5,
+          "events": {
+            "4": "death"
+          }
+        }
+      },
+      "collision": {
+        "type": "circle",
+        "rad": 8
+      }
+    },
+    "Player": {
       "width": 88,
       "height": 24,
       "anchorX": 50,
@@ -281,50 +325,6 @@
         },
         "jump": {
           "length": 4
-        }
-      },
-      "collision": {
-        "type": "circle",
-        "rad": 8
-      }
-    },
-    "Orc": {
-      "width": 48,
-      "height": 39,
-      "anchorX": 20,
-      "anchorY": 20,
-      "states": [
-        "idle",
-        "walk",
-        "attack1",
-        "attack2",
-        "hit",
-        "death"
-      ],
-      "animations": {
-        "idle": {
-          "length": 6
-        },
-        "walk": {
-          "length": 6
-        },
-        "attack1": {
-          "length": 6,
-          "events": {
-            "4": "attack1"
-          }
-        },
-        "attack2": {
-          "length": 6
-        },
-        "hit": {
-          "length": 4
-        },
-        "death": {
-          "length": 5,
-          "events": {
-            "4": "death"
-          }
         }
       },
       "collision": {
@@ -610,7 +610,7 @@
       "width": 37,
       "height": 72,
       "anchorX": 19,
-      "anchorY": 54,
+      "anchorY": 50,
       "states": [
         "idle"
       ],

@@ -272,7 +272,7 @@
         canvasMouseY =
             (event.clientY - canvasGeometry.top) * canvasGeometry.scaleY - camY;
 
-        console.log(canvasMouseX, canvasMouseY);
+        // console.log(canvasMouseX, canvasMouseY);
 
         if (isPanning) {
             camX += event.clientX - panStart.x;
@@ -414,7 +414,6 @@
         event.preventDefault();
     }
 
-    $inspect(isPanning);
 </script>
 
 <svelte:window
