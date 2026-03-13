@@ -21,6 +21,7 @@ export function getLevelJson() {
             y: ent.y,
             rot: ent.rot,
             isFloorItem: ent.isFloorItem,
+            isStatic: ent.isStatic,
             scale: ent.scale
         })
     });
@@ -41,7 +42,7 @@ export function loadLevelFromJson(jsonObj) {
 
     jsonObj.entities.forEach(ent => {
         const res = resources.state.entities.find(res => res.name === ent.name);
-        addEntity(res, ent.x, ent.y, ent.scale, ent.rot, ent.isFloorItem);
+        addEntity(res, ent.x, ent.y, ent.scale, ent.rot, ent.isFloorItem, ent.isStatic);
         if (level.state.resources.indexOf(res.name) === -1) level.state.resources.push(res.name);
     });
 
@@ -103,7 +104,7 @@ export async function loadResources() {
     }
 }
 
-export function addEntity(res, x, y, scale, rot, isFloorItem) {
+export function addEntity(res, x, y, scale, rot, isFloorItem, isStatic) {
     level.state.entities.push({
         res,
         x,
@@ -111,6 +112,7 @@ export function addEntity(res, x, y, scale, rot, isFloorItem) {
         scale,
         rot,
         isFloorItem,
+        isStatic
     });
 
     //add to resources list

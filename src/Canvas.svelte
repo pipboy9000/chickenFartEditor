@@ -37,6 +37,7 @@
     let propRotation = $state(0);
     let propScale = $state(1);
     let propIsFloorItem = $state(false);
+    let propIsStatic = $state(false);
 
     let isPanning = $state(false);
     let panStart = { x: 0, y: 0 };
@@ -304,6 +305,7 @@
                 propScale,
                 propRotation,
                 propIsFloorItem,
+                propIsStatic,
             );
 
             saveLevelToLocalStorage();
@@ -333,6 +335,7 @@
                 propIsFloorItem = selected.isFloorItem;
                 propRotation = selected.rot;
                 propScale = selected.scale;
+                propIsStatic = selected.isStatic;
                 selectedResource.state = selected.res;
 
                 //then remove it from the entities list for drag n drop behaviour
@@ -388,7 +391,6 @@
     }
 
     function onmousedown(event) {
-        console.log(event.button);
         if (event.button === 2) {
             selectedResource.state = null;
             selectedFloorTile.state = null;
@@ -471,6 +473,10 @@
                 <label>Floor item</label>
                 <input type="checkbox" bind:checked={propIsFloorItem} />
             </div>
+            <div class="inputField">
+                <label>static</label>
+                <input type="checkbox" bind:checked={propIsStatic} />
+            </div>
         </div>
         <button
             class="trashIcon"
@@ -478,6 +484,7 @@
                 event.stopPropagation();
                 selectedResource.state = null;
                 propIsFloorItem = false;
+                propIsStatic = false;
                 propRotation = 0;
                 propScale = 1;
                 draw();
